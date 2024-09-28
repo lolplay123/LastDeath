@@ -1,0 +1,9 @@
+# Message format settings.
+Death: "You died at &7<&b$world &r$x $y $z&7> &r☠"
+Reload: "&7[&aOK&7] &rConfig &areloaded!"
+
+# World alias settings.
+Alias:
+  world: "&aWORLD"
+  world_nether: "&cNETHER"
+  world_the_end: "&dEND"

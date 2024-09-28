@@ -1,0 +1,25 @@
+name: LastDeath
+version: '1.0.0'
+main: net.takuppe.lastDeath.LastDeath
+api-version: '1.21'
+authors: [ lolplay_ ]
+description: A plugin to show the last death information of players.
+commands:
+  lastdeath:
+    description: Shows the last death information or reloads the config, or deletes death logs.
+    usage: /lastdeath show [player] | /lastdeath reload | /lastdeath deletelog <player>
+    permission-message: You do not have permission to use this command.
+
+permissions:
+  lastdeath.show.self:
+    description: Allows the player to view their own last death information.
+    default: true
+  lastdeath.show.other:
+    description: Allows the player to view other players' last death information.
+    default: op
+  lastdeath.reload:
+    description: Allows the player to reload the plugin configuration.
+    default: op
+  lastdeath.deletelog:
+    description: Allows the player to delete death logs of a player.
+    default: op
