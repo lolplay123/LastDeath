@@ -35,7 +35,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 
         if (args.length == 0) {
             sender.sendMessage("§7[§cNG§7] §rInvalid command usage.");
-            sender.sendMessage("§c/lastdeath show <player>");
+            sender.sendMessage("§c/lastdeath show <or> /lastdeath show <player>");
             sender.sendMessage("§c/lastdeath reload");
             sender.sendMessage("§c/lastdeath deletelog <player>");
             return true;
@@ -70,20 +70,15 @@ public class Commands implements CommandExecutor, TabCompleter {
                         sender.sendMessage("§7[§cNG§7] §rYou do not have permission to view other players' death data.");
                     }
                 }
+            } else {
+                sender.sendMessage("§7[§cNG§7] §rToo many arguments.");
+                sender.sendMessage("§cUsage: /lastdeath show <or> /lastdeath show <player>");
             }
         } else if (args[0].equalsIgnoreCase("reload")) {
-            if (hasAllPermissions || sender.hasPermission("lastdeath.reload")) {
-                try {
-                    plugin.reloadConfig();
-                    String reloadMessage = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Reload", "&7[&aOK&7] &rConfig &areloaded!"));
-                    sender.sendMessage(reloadMessage);
-                } catch (Exception e) {
-                    String errorMessage = "An error occurred while reloading the config: " + e.getMessage();
-                    plugin.getLogger().severe(errorMessage);
-                    sender.sendMessage("§7[§4ERROR§7] §rAn error occurred while reloading the config. Please check the console for details.");
-                }
-            } else {
-                sender.sendMessage("§7[§cNG§7] §rYou do not have permission to reload the config.");
+            if (args.length > 1) {
+                sender.sendMessage("§7[§cNG§7] §rToo many arguments.");
+                sender.sendMessage("§cUsage: /lastdeath reload");
+                return true;
             }
         } else if (args[0].equalsIgnoreCase("deletelog")) {
             if (args.length == 2) {
@@ -94,12 +89,12 @@ public class Commands implements CommandExecutor, TabCompleter {
                     sender.sendMessage("§7[§cNG§7] §rYou do not have permission to delete death logs.");
                 }
             } else {
-                sender.sendMessage("§7[§cNG§7] §rInvalid command usage.");
-                sender.sendMessage("§c/lastdeath deletelog <player>");
+                sender.sendMessage("§7[§cNG§7] §rToo many arguments.");
+                sender.sendMessage("§cUsage: /lastdeath deletelog <player>");
             }
         } else {
             sender.sendMessage("§7[§cNG§7] §rInvalid command usage.");
-            sender.sendMessage("§c/lastdeath show <player>");
+            sender.sendMessage("§c/lastdeath show <or> /lastdeath show <player>");
             sender.sendMessage("§c/lastdeath reload");
             sender.sendMessage("§c/lastdeath deletelog <player>");
         }
