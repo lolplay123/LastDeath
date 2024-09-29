@@ -9,6 +9,7 @@ commands:
     description: Shows the last death information or reloads the config, or deletes death logs.
     usage: /lastdeath show [player] | /lastdeath reload | /lastdeath deletelog <player>
     permission-message: You do not have permission to use this command.
+    aliases: [ld]
 
 permissions:
   lastdeath.show.self:
