@@ -10,11 +10,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -64,19 +60,47 @@ public class LastDeath extends JavaPlugin implements Listener {
         UUID uuid = player.getUniqueId();
         String newMCID = player.getName();
 
-        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-            try (Connection connection = getDatabaseConnection()) {
-                String query = "INSERT OR REPLACE INTO players (uuid, mcid) VALUES (?, ?)";
-                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                    preparedStatement.setString(1, uuid.toString());
-                    preparedStatement.setString(2, newMCID);
-                    preparedStatement.executeUpdate();
-                }
-                getLogger().info("Player data updated: UUID=" + uuid + ", MCID=" + newMCID);
-            } catch (SQLException e) {
-                getLogger().severe("An error occurred while updating player data: " + e.getMessage());
+        try (Connection connection = getConnection()) {
+            if (connection == null || connection.isClosed()) {
+                getLogger().severe("Database connection is not available.");
+                return;
             }
-        });
+
+            // データベース内のMCIDを取得して比較し、変更があった場合に更新
+            String query = "SELECT mcid FROM players WHERE uuid = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, uuid.toString());
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+                    String currentMCID = resultSet.getString("mcid");
+                    if (!currentMCID.equals(newMCID)) {
+                        // MCIDが変更されている場合のみデータベースを更新
+                        String updateQuery = "UPDATE players SET mcid = ? WHERE uuid = ?";
+                        try (PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
+                            updateStatement.setString(1, newMCID);
+                            updateStatement.setString(2, uuid.toString());
+                            updateStatement.executeUpdate();
+
+                            getLogger().info("Player data updated: UUID=" + uuid + ", MCID=" + newMCID);
+                        }
+                    }
+                } else {
+                    // データベースにプレイヤーが存在しない場合、新規追加
+                    String insertQuery = "INSERT INTO players (uuid, mcid) VALUES (?, ?)";
+                    try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
+                        insertStatement.setString(1, uuid.toString());
+                        insertStatement.setString(2, newMCID);
+                        insertStatement.executeUpdate();
+
+                        getLogger().info("Inserted new player into database: UUID=" + uuid + ", MCID=" + newMCID);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            getLogger().severe("An error occurred while updating player MCID: " + e.getMessage());
+            e.fillInStackTrace();
+        }
     }
 
     @EventHandler
@@ -126,7 +150,7 @@ public class LastDeath extends JavaPlugin implements Listener {
                 });
             } catch (SQLException e) {
                 getLogger().severe("An error occurred while saving death data: " + e.getMessage());
-                Bukkit.getScheduler().runTask(this, () -> player.sendMessage(ChatColor.COLOR_CHAR + "§7[§4ERROR§7] §rAn error occurred while saving your death data."));
+                Bukkit.getScheduler().runTask(this, () -> player.sendMessage("§7[§4ERROR§7] §rAn error occurred while saving your death data."));
             }
         });
     }
