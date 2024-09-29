@@ -15,6 +15,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Objects;
 import java.util.UUID;
 
 public class LastDeath extends JavaPlugin implements Listener {
@@ -28,7 +29,7 @@ public class LastDeath extends JavaPlugin implements Listener {
 
         getLogger().info("LastDeath is now enabled!");
         getServer().getPluginManager().registerEvents(this, this);
-        getCommand("lastdeath").setExecutor(new Commands(this));
+        Objects.requireNonNull(getCommand("lastdeath")).setExecutor(new Commands(this));
 
         // データベース接続設定
         try {
@@ -98,7 +99,7 @@ public class LastDeath extends JavaPlugin implements Listener {
                 String insertQuery = "INSERT INTO deaths (uuid, world, x, y, z, time) VALUES (?, ?, ?, ?, ?, ?)";
                 try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
                     insertStatement.setString(1, player.getUniqueId().toString());
-                    insertStatement.setString(2, loc.getWorld().getName());
+                    insertStatement.setString(2, Objects.requireNonNull(loc.getWorld()).getName());
                     insertStatement.setDouble(3, loc.getX());
                     insertStatement.setDouble(4, loc.getY());
                     insertStatement.setDouble(5, loc.getZ());
@@ -140,7 +141,7 @@ public class LastDeath extends JavaPlugin implements Listener {
                 getLogger().info("Saved death.db!");
             }
         } catch (SQLException e) {
-            e.getMessage();
+            e.fillInStackTrace();
         }
 
         getLogger().info("LastDeath is now disabled!");

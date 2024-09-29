@@ -7,16 +7,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class Commands implements CommandExecutor, TabCompleter {
 
@@ -27,7 +25,7 @@ public class Commands implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, Command command,@NotNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase("lastdeath")) {
             return false;
         }
@@ -36,7 +34,7 @@ public class Commands implements CommandExecutor, TabCompleter {
         boolean hasAllPermissions = sender.isOp() || sender.hasPermission("*");
 
         if (args.length == 0) {
-            sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rInvalid command usage.");
+            sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rInvalid command usage.");
             sender.sendMessage(ChatColor.RED + "/lastdeath show <player>");
             sender.sendMessage(ChatColor.RED + "/lastdeath reload");
             sender.sendMessage(ChatColor.RED + "/lastdeath deletelog <player>");
@@ -44,12 +42,11 @@ public class Commands implements CommandExecutor, TabCompleter {
         }
 
         if (args[0].equalsIgnoreCase("show")) {
-            if (args.length == 1 && sender instanceof Player) {
-                Player player = (Player) sender;
+            if (args.length == 1 && sender instanceof Player player) {
                 if (hasAllPermissions || sender.hasPermission("lastdeath.show.self")) {
                     showLastDeathInfo(sender, player.getUniqueId());
                 } else {
-                    sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rYou do not have permission to view your own death info.");
+                    sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rYou do not have permission to view your own death info.");
                 }
             } else if (args.length == 2) {
                 String targetName = args[1];
@@ -59,7 +56,7 @@ public class Commands implements CommandExecutor, TabCompleter {
                     if (hasAllPermissions || sender.hasPermission("lastdeath.show.self")) {
                         showLastDeathInfo(sender, player.getUniqueId());
                     } else {
-                        sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rYou do not have permission to view your own death info.");
+                        sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rYou do not have permission to view your own death info.");
                     }
                 } else {
                     if (hasAllPermissions || sender.hasPermission("lastdeath.show.other")) {
@@ -70,14 +67,10 @@ public class Commands implements CommandExecutor, TabCompleter {
                             getOfflinePlayerInfo(sender, targetName);
                         }
                     } else {
-                        sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rYou do not have permission to view other players' death data.");
+                        sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rYou do not have permission to view other players' death data.");
                     }
                 }
             }
-            /*else {
-                sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rInvalid command usage.");
-                sender.sendMessage(ChatColor.RED + "/lastdeath show <player>");
-            }*/
         } else if (args[0].equalsIgnoreCase("reload")) {
             if (hasAllPermissions || sender.hasPermission("lastdeath.reload")) {
                 try {
@@ -87,10 +80,10 @@ public class Commands implements CommandExecutor, TabCompleter {
                 } catch (Exception e) {
                     String errorMessage = "An error occurred while reloading the config: " + e.getMessage();
                     plugin.getLogger().severe(errorMessage);
-                    sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rAn error occurred while reloading the config. Please check the console for details.");
+                    sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rAn error occurred while reloading the config. Please check the console for details.");
                 }
             } else {
-                sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rYou do not have permission to reload the config.");
+                sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rYou do not have permission to reload the config.");
             }
         } else if (args[0].equalsIgnoreCase("deletelog")) {
             if (args.length == 2) {
@@ -98,14 +91,14 @@ public class Commands implements CommandExecutor, TabCompleter {
                 if (hasAllPermissions || sender.hasPermission("lastdeath.deletelog")) {
                     deletePlayerDeathLog(sender, targetName);
                 } else {
-                    sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rYou do not have permission to delete death logs.");
+                    sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rYou do not have permission to delete death logs.");
                 }
             } else {
-                sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rInvalid command usage.");
+                sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rInvalid command usage.");
                 sender.sendMessage(ChatColor.RED + "/lastdeath deletelog <player>");
             }
         } else {
-            sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rInvalid command usage.");
+            sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rInvalid command usage.");
             sender.sendMessage(ChatColor.RED + "/lastdeath show <player>");
             sender.sendMessage(ChatColor.RED + "/lastdeath reload");
             sender.sendMessage(ChatColor.RED + "/lastdeath deletelog <player>");
@@ -140,13 +133,13 @@ public class Commands implements CommandExecutor, TabCompleter {
                         if (rowsAffected > 0) {
                             Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§aOK§7] §rSuccessfully deleted all death logs for player: " + ChatColor.AQUA + mcid));
                         } else {
-                            Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rNo death logs found for player: " + mcid));
+                            Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rNo death logs found for player: " + mcid));
                         }
                     }
                 }
             } catch (SQLException e) {
                 plugin.getLogger().severe("An error occurred while deleting death logs for player: " + mcid + " - " + e.getMessage());
-                Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rAn error occurred while deleting death logs. Please try again later."));
+                Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rAn error occurred while deleting death logs. Please try again later."));
             }
         });
     }
@@ -181,7 +174,13 @@ public class Commands implements CommandExecutor, TabCompleter {
                             String header = "&r*  &eWorld  X  Y  Z  Time";
                             Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.translateAlternateColorCodes('&', header)));
 
-                            Map<String, String> aliasMap = (Map<String, String>) (Map) plugin.getConfig().getConfigurationSection("Alias").getValues(false);
+                            Map<String, Object> aliasMapRaw = Objects.requireNonNull(plugin.getConfig().getConfigurationSection("Alias")).getValues(false);
+                            Map<String, String> aliasMap = new HashMap<>();
+                            for (Map.Entry<String, Object> entry : aliasMapRaw.entrySet()) {
+                                if (entry.getValue() instanceof String) {
+                                    aliasMap.put(entry.getKey(), (String) entry.getValue());
+                                }
+                            }
 
                             int index = 0;
                             do {
@@ -205,13 +204,13 @@ public class Commands implements CommandExecutor, TabCompleter {
                             } while (resultSet.next() && index < 5);
                             sender.sendMessage("");
                         } else {
-                            Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rNo death records found for the player."));
+                            Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rNo death records found for the player."));
                         }
                     }
                 }
             } catch (SQLException e) {
                 plugin.getLogger().severe("An error occurred while retrieving death data for UUID: " + uuid + " - " + e.getMessage());
-                Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rAn error occurred while retrieving death data. Please try again later."));
+                Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rAn error occurred while retrieving death data. Please try again later."));
             }
         });
     }
@@ -242,18 +241,18 @@ public class Commands implements CommandExecutor, TabCompleter {
                         UUID uuid = UUID.fromString(resultSet.getString("uuid"));
                         showLastDeathInfo(sender, uuid);
                     } else {
-                        Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rThe specified player's data could not be found."));
+                        Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rThe specified player's data could not be found."));
                     }
                 }
             } catch (SQLException e) {
                 plugin.getLogger().severe("An error occurred while retrieving player data for MCID: " + mcid + " - " + e.getMessage());
-                Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rAn error occurred while retrieving player data. Please try again later."));
+                Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rAn error occurred while retrieving player data. Please try again later."));
             }
         });
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         List<String> completions = new ArrayList<>();
         if (command.getName().equalsIgnoreCase("lastdeath")) {
             if (args.length == 1) {
