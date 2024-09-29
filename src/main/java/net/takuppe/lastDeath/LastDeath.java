@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
 
-public class lastdeath extends JavaPlugin implements Listener {
+public class LastDeath extends JavaPlugin implements Listener {
 
     private Connection connection;
 
@@ -28,7 +28,7 @@ public class lastdeath extends JavaPlugin implements Listener {
 
         getLogger().info("LastDeath is now enabled!");
         getServer().getPluginManager().registerEvents(this, this);
-        getCommand("lastdeath").setExecutor(new commands(this));
+        getCommand("lastdeath").setExecutor(new Commands(this));
 
         // データベース接続設定
         try {

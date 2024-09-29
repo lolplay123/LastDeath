@@ -18,11 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class commands implements CommandExecutor, TabCompleter {
+public class Commands implements CommandExecutor, TabCompleter {
 
-    private final lastdeath plugin;
+    private final LastDeath plugin;
 
-    public commands(lastdeath plugin) {
+    public Commands(LastDeath plugin) {
         this.plugin = plugin;
     }
 
