@@ -80,6 +80,21 @@ public class Commands implements CommandExecutor, TabCompleter {
                 sender.sendMessage("§cUsage: /lastdeath reload");
                 return true;
             }
+
+            if (hasAllPermissions || sender.hasPermission("lastdeath.reload")) {
+                try {
+                    plugin.reloadConfig();
+                    String reloadMessage = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Reload", "&7[&aOK&7] §rConfig reloaded!"));
+                    sender.sendMessage(reloadMessage);
+
+                } catch (Exception e) {
+                    String errorMessage = "An error occurred while reloading the config : " + e.getMessage();
+                    plugin.getLogger().severe(errorMessage);
+                    sender.sendMessage("§7[§4ERROR§7] §rAn error occurred while reloading the config. Please check the console for details.");
+                }
+            } else {
+                sender.sendMessage("§7[§cNG§7] §rYou do not have permission to reload the config.");
+            }
         } else if (args[0].equalsIgnoreCase("deletelog")) {
             if (args.length == 2) {
                 String targetName = args[1];
