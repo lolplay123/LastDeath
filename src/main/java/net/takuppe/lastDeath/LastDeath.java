@@ -126,7 +126,7 @@ public class LastDeath extends JavaPlugin implements Listener {
                 });
             } catch (SQLException e) {
                 getLogger().severe("An error occurred while saving death data: " + e.getMessage());
-                Bukkit.getScheduler().runTask(this, () -> player.sendMessage(ChatColor.COLOR_CHAR + "§7[§cErr§7] §rAn error occurred while saving your death data."));
+                Bukkit.getScheduler().runTask(this, () -> player.sendMessage(ChatColor.COLOR_CHAR + "§7[§4ERROR§7] §rAn error occurred while saving your death data."));
             }
         });
     }

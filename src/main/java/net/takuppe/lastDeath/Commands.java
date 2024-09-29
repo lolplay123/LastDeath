@@ -80,7 +80,7 @@ public class Commands implements CommandExecutor, TabCompleter {
                 } catch (Exception e) {
                     String errorMessage = "An error occurred while reloading the config: " + e.getMessage();
                     plugin.getLogger().severe(errorMessage);
-                    sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rAn error occurred while reloading the config. Please check the console for details.");
+                    sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§4ERROR§7] §rAn error occurred while reloading the config. Please check the console for details.");
                 }
             } else {
                 sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rYou do not have permission to reload the config.");
@@ -139,7 +139,7 @@ public class Commands implements CommandExecutor, TabCompleter {
                 }
             } catch (SQLException e) {
                 plugin.getLogger().severe("An error occurred while deleting death logs for player: " + mcid + " - " + e.getMessage());
-                Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rAn error occurred while deleting death logs. Please try again later."));
+                Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§4ERROR§7] §rAn error occurred while deleting death logs. Please try again later."));
             }
         });
     }
@@ -210,7 +210,7 @@ public class Commands implements CommandExecutor, TabCompleter {
                 }
             } catch (SQLException e) {
                 plugin.getLogger().severe("An error occurred while retrieving death data for UUID: " + uuid + " - " + e.getMessage());
-                Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rAn error occurred while retrieving death data. Please try again later."));
+                Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§4ERROR§7] §rAn error occurred while retrieving death data. Please try again later."));
             }
         });
     }
@@ -246,7 +246,7 @@ public class Commands implements CommandExecutor, TabCompleter {
                 }
             } catch (SQLException e) {
                 plugin.getLogger().severe("An error occurred while retrieving player data for MCID: " + mcid + " - " + e.getMessage());
-                Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§cNG§7] §rAn error occurred while retrieving player data. Please try again later."));
+                Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage(ChatColor.COLOR_CHAR + "§7[§4ERROR§7] §rAn error occurred while retrieving player data. Please try again later."));
             }
         });
     }
