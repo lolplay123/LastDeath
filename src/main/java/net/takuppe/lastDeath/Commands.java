@@ -121,7 +121,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 
                     if (!resultSet.next()) {
                         // プレイヤーのデータが見つからない場合の処理
-                        Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage("§7[§cNG§7] §rThe specified player " + ChatColor.AQUA + mcid + "§r's data was not found in the database.\nIt's possible that you've never logged into the server."));
+                        Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage("§7[§cNG§7] §rThe specified player " + ChatColor.AQUA + mcid + "§r's data was not found in the database. It's possible that you've never logged into the server."));
                         return;
                     }
 
@@ -244,7 +244,7 @@ public class Commands implements CommandExecutor, TabCompleter {
                         UUID uuid = UUID.fromString(resultSet.getString("uuid"));
                         showLastDeathInfo(sender, uuid);
                     } else {
-                        Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage("§7[§cNG§7] §rThe specified player " + ChatColor.AQUA + mcid + "§r's data was not found in the database.\nIt's possible that you've never logged into the server."));
+                        Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage("§7[§cNG§7] §rThe specified player " + ChatColor.AQUA + mcid + "§r's data was not found in the database. It's possible that you've never logged into the server."));
                     }
                 }
             } catch (SQLException e) {
