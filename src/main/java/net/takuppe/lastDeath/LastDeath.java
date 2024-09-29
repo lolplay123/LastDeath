@@ -98,7 +98,7 @@ public class LastDeath extends JavaPlugin implements Listener {
                 }
             }
         } catch (SQLException e) {
-            getLogger().severe("An error occurred while updating player MCID: " + e.getMessage());
+            getLogger().severe("An error occurred while updating player MCID : " + e.getMessage());
             e.fillInStackTrace();
         }
     }
@@ -149,7 +149,7 @@ public class LastDeath extends JavaPlugin implements Listener {
                             .replace("$z", String.format("%.1f", loc.getZ()))));
                 });
             } catch (SQLException e) {
-                getLogger().severe("An error occurred while saving death data: " + e.getMessage());
+                getLogger().severe("An error occurred while saving death data : " + e.getMessage());
                 Bukkit.getScheduler().runTask(this, () -> player.sendMessage("§7[§4ERROR§7] §rAn error occurred while saving your death data."));
             }
         });
@@ -157,12 +157,11 @@ public class LastDeath extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        getLogger().info("death.db saving...");
+        getLogger().info("Disabling LastDeath...");
 
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
-                getLogger().info("Saved death.db!");
             }
         } catch (SQLException e) {
             e.fillInStackTrace();
@@ -175,7 +174,7 @@ public class LastDeath extends JavaPlugin implements Listener {
         try {
             return getDatabaseConnection();
         } catch (SQLException e) {
-            getLogger().severe("Failed to get database connection: " + e.getMessage());
+            getLogger().severe("Failed to get database connection : " + e.getMessage());
             return null;
         }
     }

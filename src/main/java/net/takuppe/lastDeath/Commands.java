@@ -25,7 +25,7 @@ public class Commands implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, Command command,@NotNull String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase("lastdeath")) {
             return false;
         }
@@ -35,9 +35,9 @@ public class Commands implements CommandExecutor, TabCompleter {
 
         if (args.length == 0) {
             sender.sendMessage("§7[§cNG§7] §rInvalid command usage.");
-            sender.sendMessage(ChatColor.RED + "/lastdeath show <player>");
-            sender.sendMessage(ChatColor.RED + "/lastdeath reload");
-            sender.sendMessage(ChatColor.RED + "/lastdeath deletelog <player>");
+            sender.sendMessage("§c/lastdeath show <player>");
+            sender.sendMessage("§c/lastdeath reload");
+            sender.sendMessage("§c/lastdeath deletelog <player>");
             return true;
         }
 
@@ -95,13 +95,13 @@ public class Commands implements CommandExecutor, TabCompleter {
                 }
             } else {
                 sender.sendMessage("§7[§cNG§7] §rInvalid command usage.");
-                sender.sendMessage(ChatColor.RED + "/lastdeath deletelog <player>");
+                sender.sendMessage("§c/lastdeath deletelog <player>");
             }
         } else {
             sender.sendMessage("§7[§cNG§7] §rInvalid command usage.");
-            sender.sendMessage(ChatColor.RED + "/lastdeath show <player>");
-            sender.sendMessage(ChatColor.RED + "/lastdeath reload");
-            sender.sendMessage(ChatColor.RED + "/lastdeath deletelog <player>");
+            sender.sendMessage("§c/lastdeath show <player>");
+            sender.sendMessage("§c/lastdeath reload");
+            sender.sendMessage("§c/lastdeath deletelog <player>");
         }
 
         return true;
@@ -121,7 +121,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 
                     if (!resultSet.next()) {
                         // プレイヤーのデータが見つからない場合の処理
-                        Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage("§7[§cNG§7] §rThe specified player " + ChatColor.AQUA + mcid + "§r's data was not found in the database. It's possible that you've never logged into the server."));
+                        Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage("§7[§cNG§7] §rThe specified player §b" + mcid + "§r's data was not found in the database. It's possible that you've never logged into the server."));
                         return;
                     }
 
@@ -133,9 +133,9 @@ public class Commands implements CommandExecutor, TabCompleter {
                         int rowsAffected = deleteStatement.executeUpdate();
 
                         if (rowsAffected > 0) {
-                            Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage("§7[§aOK§7] §rSuccessfully deleted all death logs for player: " + ChatColor.AQUA + mcid));
+                            Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage("§7[§aOK§7] §rSuccessfully deleted all death logs for player §7: §b" + mcid));
                         } else {
-                            Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage("§7[§cNG§7] §rNo death data found for specified player : " + ChatColor.AQUA + mcid));
+                            Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage("§7[§cNG§7] §rNo death data found for specified player §7: §b" + mcid));
                         }
                     }
                 }
@@ -160,7 +160,7 @@ public class Commands implements CommandExecutor, TabCompleter {
                     ResultSet playerResultSet = playerStatement.executeQuery();
 
                     if (!playerResultSet.next()) {
-                        throw new SQLException("The player's data does not exist in the database for UUID: " + uuid);
+                        throw new SQLException("The player's data does not exist in the database for UUID : " + uuid);
                     }
 
                     String mcid = playerResultSet.getString("mcid");
@@ -207,12 +207,12 @@ public class Commands implements CommandExecutor, TabCompleter {
                             } while (resultSet.next() && index < 5);
                             sender.sendMessage("");
                         } else {
-                            Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage("§7[§cNG§7] §rNo death data found for specified player : " + ChatColor.AQUA + mcid));
+                            Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage("§7[§cNG§7] §rNo death data found for specified player §7: §b" + mcid));
                         }
                     }
                 }
             } catch (SQLException e) {
-                plugin.getLogger().severe("An error occurred while retrieving death data for UUID: " + uuid + " - " + e.getMessage());
+                plugin.getLogger().severe("An error occurred while retrieving death data for UUID : " + uuid + " - " + e.getMessage());
                 Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage("§7[§4ERROR§7] §rAn error occurred while retrieving death data. Please try again later."));
             }
         });
@@ -244,11 +244,11 @@ public class Commands implements CommandExecutor, TabCompleter {
                         UUID uuid = UUID.fromString(resultSet.getString("uuid"));
                         showLastDeathInfo(sender, uuid);
                     } else {
-                        Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage("§7[§cNG§7] §rThe specified player " + ChatColor.AQUA + mcid + "§r's data was not found in the database. It's possible that you've never logged into the server."));
+                        Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage("§7[§cNG§7] §rThe specified player §b" + mcid + "§r's data was not found in the database. It's possible that you've never logged into the server."));
                     }
                 }
             } catch (SQLException e) {
-                plugin.getLogger().severe("An error occurred while retrieving player data for MCID: " + mcid + " - " + e.getMessage());
+                plugin.getLogger().severe("An error occurred while retrieving player data for MCID : " + mcid + " - " + e.getMessage());
                 Bukkit.getScheduler().runTask(plugin, () -> sender.sendMessage("§7[§4ERROR§7] §rAn error occurred while retrieving player data. Please try again later."));
             }
         });
@@ -288,7 +288,7 @@ public class Commands implements CommandExecutor, TabCompleter {
                             }
                         }
                     } catch (SQLException e) {
-                        plugin.getLogger().severe("An error occurred while retrieving player data for tab completion: " + e.getMessage());
+                        plugin.getLogger().severe("An error occurred while retrieving player data for tab completion : " + e.getMessage());
                     }
                 }
             }
