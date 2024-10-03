@@ -1,0 +1,16 @@
+[プラグインのインストール方法]
+pluginsディレクトリにプラグインを追加する。
+サーバの起動をする。
+`config.yml`, `deaths.db` が生成される。
+おしまい。
+
+[プラグインの機能]
+ログインした際にdeaths.dbにUUIDとMCIDが登録される。死亡情報を保存するために必要。
+実際に死亡すると、チャットログに死んだディメンション、座標が表示される。
+
+[コマンド]
+コアコマンドは `/lastdeath` (エイリアス: `/ld`)
+
+`/lastdeath show <player>` コマンドで過去5回の死亡情報を確認できる。表示される内容は、ディメンション・座標・死んでからの時間。 (lastdeath.show.self, lastdeath.show.other)
+`/lastdeath deletelog <player>` コマンドでプレイヤーの死亡情報をデータベース上から削除できる。 (lastdeath.deletelog)
+`/lastdeath reload` コマンドでコンフィグファイルの再読み込みを行う。 (lastdeath.reload)
